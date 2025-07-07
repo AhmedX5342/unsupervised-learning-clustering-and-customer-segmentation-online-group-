@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Excel Upload and Predict</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    pre {
+      background-color: #efefef;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Upload Excel File</h1>
+
+  <form id="uploadForm">
+    <input type="file" id="fileInput" accept=".xlsx" required />
+    <button type="submit">Upload & Predict</button>
+  </form>
+
+  <pre id="result">Result will appear here...</pre>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      const resultBox = document.getElementById("result");
+
+      if (!file) {
+        resultBox.innerText = "Please select an Excel file first.";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      resultBox.innerText = "Uploading and predicting...";
+
+      try {
+        const res = await fetch("/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          resultBox.innerText = JSON.stringify(result, null, 2);
+        } else {
+          resultBox.innerText = result.error || "An error occurred.";
+        }
+      } catch (err) {
+        resultBox.innerText = "Failed to connect to server.";
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>
