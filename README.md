@@ -14,7 +14,7 @@ To set up and run the application, follow the steps below.
 `pip install pandas numpy scikit-learn matplotlib seaborn openpyxl flask joblib` <br>
 `python api.py` <br>
  
-### Node js Environment (in web interface/backend folder):
+### Node js (in web interface/backend folder):
 `npm i axios express form-data multer xlsx` <br>
 `node app.js` <br>
 
